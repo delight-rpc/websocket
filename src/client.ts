@@ -1,0 +1,52 @@
+import * as DelightRPC from 'delight-rpc'
+import { Deferred } from 'extra-promise'
+import { CustomError } from '@blackglory/errors'
+import { WebSocket, MessageEvent } from 'ws'
+import { getResult } from 'return-style'
+import { isString } from '@blackglory/types'
+
+export function createClient<IAPI extends object>(
+  socket: WebSocket
+): [client: DelightRPC.ClientProxy<IAPI>, close: () => void] {
+  const pendings: { [id: string]: Deferred<DelightRPC.IResponse<any>> } = {}
+
+  socket.addEventListener('message', handler)
+
+  const client = DelightRPC.createClient<IAPI>(
+    async function send(request) {
+      const res = new Deferred<DelightRPC.IResponse<any>>()
+      pendings[request.id] = res
+      try {
+        socket.send(JSON.stringify(request))
+        return await res
+      } finally {
+        delete pendings[request.id]
+      }
+    }
+  )
+
+  return [client, close]
+
+  function close() {
+    socket.removeEventListener('message', handler)
+
+    for (const [key, deferred] of Object.entries(pendings)) {
+      deferred.reject(new ClientClosed())
+      delete pendings[key]
+    }
+  }
+
+  function handler(event: MessageEvent): void {
+    const data = event.data
+    if (isString(data)) {
+      const res = getResult(() => JSON.parse(data))
+      if (DelightRPC.isResult(res)) {
+        pendings[res.id].resolve(res)
+      } else if (DelightRPC.isError(res)) {
+        pendings[res.id].reject(res)
+      }
+    }
+  }
+}
+
+export class ClientClosed extends CustomError {}

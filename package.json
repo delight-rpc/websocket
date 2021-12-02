@@ -1,0 +1,69 @@
+{
+  "name": "@delight-rpc/websocket",
+  "version": "0.1.0",
+  "description": "",
+  "keywords": [],
+  "files": [
+    "lib"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "repository": "git@github.com:delight-rpc/websocket.git",
+  "author": "BlackGlory <woshenmedoubuzhidao@blackglory.me>",
+  "license": "MIT",
+  "scripts": {
+    "prepare": "ts-patch install -s",
+    "lint": "eslint --ext .js,.jsx,.ts,.tsx --quiet src",
+    "test": "jest --no-cache --runInBand --config jest.config.js",
+    "test:debug": "node --inspect-brk node_modules/.bin/jest --runInBand",
+    "test:coverage": "jest --coverage --config jest.config.js",
+    "prepublishOnly": "run-s clean build",
+    "clean": "rimraf lib",
+    "build": "cross-env NODE_ENV=production tsc --project tsconfig.build.json",
+    "release": "standard-version"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "run-s prepare lint build test",
+      "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
+    }
+  },
+  "engines": {
+    "node": ">=12"
+  },
+  "devDependencies": {
+    "@blackglory/jest-matchers": "^0.1.21",
+    "@blackglory/wait-for": "^0.3.4",
+    "@commitlint/cli": "^15.0.0",
+    "@commitlint/config-conventional": "^15.0.0",
+    "@types/jest": "^27.0.3",
+    "@types/node": "^16.11.11",
+    "@types/ws": "^8.2.1",
+    "@typescript-eslint/eslint-plugin": "^5.5.0",
+    "@typescript-eslint/parser": "^5.5.0",
+    "cross-env": "^7.0.3",
+    "delight-rpc": "^1.1.1",
+    "eslint": "8.3.0",
+    "husky": "4",
+    "jest": "^27.4.3",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2",
+    "standard-version": "^9.3.2",
+    "ts-jest": "^27.0.7",
+    "ts-node": "^10.4.0",
+    "ts-patch": "^2.0.1",
+    "typescript": "^4.5.2",
+    "typescript-transform-paths": "^3.3.1"
+  },
+  "dependencies": {
+    "@blackglory/errors": "^1.1.2",
+    "@blackglory/types": "^0.5.2",
+    "extra-promise": "^0.19.2",
+    "justypes": "^0.1.6",
+    "return-style": "^0.12.4"
+  },
+  "peerDependencies": {
+    "delight-rpc": "^1.1.1",
+    "ws": "^8.3.0"
+  }
+}

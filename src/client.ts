@@ -40,10 +40,8 @@ export function createClient<IAPI extends object>(
     const data = event.data
     if (isString(data)) {
       const res = getResult(() => JSON.parse(data))
-      if (DelightRPC.isResult(res)) {
+      if (DelightRPC.isResult(res) || DelightRPC.isError(res)) {
         pendings[res.id].resolve(res)
-      } else if (DelightRPC.isError(res)) {
-        pendings[res.id].reject(res)
       }
     }
   }

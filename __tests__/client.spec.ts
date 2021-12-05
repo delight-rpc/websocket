@@ -3,9 +3,11 @@ import WebSocket, { Server, WebSocketServer } from 'ws'
 import '@blackglory/jest-matchers'
 import { createServer } from '@src/server'
 import { waitForEventEmitter } from '@blackglory/wait-for'
+import { getErrorPromise } from 'return-style'
 
 interface IAPI {
   echo(message: string): string
+  error(message: string): never
 }
 
 let server: WebSocketServer
@@ -15,6 +17,9 @@ beforeEach(() => {
     const cancelServer = createServer<IAPI>({
       echo(message) {
         return message
+      }
+    , error(message) {
+        throw new Error(message)
       }
     }, socket)
   })
@@ -31,6 +36,17 @@ describe('createClient', () => {
     const [client] = createClient<IAPI>(wsClient)
     const result = await client.echo('hello')
 
-    expect(result).toEqual('hello')
+    expect(result).toBe('hello')
+  })
+
+  test('error', async () => {
+    const wsClient = new WebSocket('ws://localhost:8080')
+    await waitForEventEmitter(wsClient, 'open')
+
+    const [client] = createClient<IAPI>(wsClient)
+    const err = await getErrorPromise(client.error('hello'))
+
+    expect(err).toBeInstanceOf(Error)
+    expect(err!.message).toMatch('Error: hello')
   })
 })

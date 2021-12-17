@@ -28,22 +28,19 @@
       "commit-msg": "commitlint --env HUSKY_GIT_PARAMS"
     }
   },
-  "engines": {
-    "node": ">=16"
-  },
   "devDependencies": {
-    "@blackglory/jest-matchers": "^0.1.21",
-    "@blackglory/wait-for": "^0.3.4",
+    "@blackglory/jest-matchers": "^0.2.1",
+    "@blackglory/wait-for": "^0.4.1",
     "@commitlint/cli": "^15.0.0",
     "@commitlint/config-conventional": "^15.0.0",
     "@types/jest": "^27.0.3",
-    "@types/node": "16",
+    "@types/node": "14",
     "@types/ws": "^8.2.1",
     "@typescript-eslint/eslint-plugin": "^5.5.0",
     "@typescript-eslint/parser": "^5.5.0",
     "cross-env": "^7.0.3",
     "delight-rpc": "^1.1.1",
-    "eslint": "8.4.0",
+    "eslint": "8.4.1",
     "husky": "4",
     "jest": "^27.4.3",
     "npm-run-all": "^4.1.5",
@@ -57,8 +54,8 @@
   },
   "dependencies": {
     "@blackglory/errors": "^1.1.2",
-    "@blackglory/types": "^0.6.2",
-    "extra-promise": "^0.20.0",
+    "@blackglory/types": "^0.6.4",
+    "extra-promise": "^0.21.0",
     "justypes": "^0.1.6",
     "return-style": "^0.12.5"
   },

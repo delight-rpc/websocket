@@ -6,6 +6,7 @@ import { isString } from '@blackglory/types'
 export function createServer<IAPI extends object>(
   api: IAPI
 , socket: WebSocket
+, parametersValidators?: DelightRPC.ParameterValidators<IAPI>
 ): () => void {
   socket.addEventListener('message', handler)
   return () => socket.removeEventListener('message', handler)
@@ -15,7 +16,7 @@ export function createServer<IAPI extends object>(
     if (isString(data)) {
       const req = getResult(() => JSON.parse(data))
       if (DelightRPC.isRequest(req)) {
-        const result = await DelightRPC.createResponse(api, req)
+        const result = await DelightRPC.createResponse(api, req, parametersValidators)
 
         socket.send(JSON.stringify(result))
       }

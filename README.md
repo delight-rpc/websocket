@@ -11,7 +11,7 @@ yarn add @delight-rpc/websocket
 ```ts
 function createClient<IAPI extends object>(
   socket: WebSocket
-, parametersValidators?: DelightRPC.ParameterValidators<IAPI>
+, parameterValidators?: DelightRPC.ParameterValidators<IAPI>
 ): [client: DelightRPC.ClientProxy<IAPI>, close: () => void]
 ```
 
@@ -20,6 +20,6 @@ function createClient<IAPI extends object>(
 function createServer<IAPI extends object>(
   api: IAPI
 , socket: WebSocket
-, parametersValidators?: DelightRPC.ParameterValidators<IAPI>
+, parameterValidators?: DelightRPC.ParameterValidators<IAPI>
 ): () => void
 ```

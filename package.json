@@ -56,7 +56,6 @@
     "@blackglory/errors": "^1.1.2",
     "@blackglory/types": "^0.6.4",
     "extra-promise": "^0.21.0",
-    "justypes": "^0.1.6",
     "return-style": "^0.12.5"
   },
   "peerDependencies": {

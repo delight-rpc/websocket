@@ -33,20 +33,28 @@ describe('createClient', () => {
     const wsClient = new WebSocket('ws://localhost:8080')
     await waitForEventEmitter(wsClient, 'open')
 
-    const [client] = createClient<IAPI>(wsClient)
-    const result = await client.echo('hello')
+    try {
+      const [client] = createClient<IAPI>(wsClient)
+      const result = await client.echo('hello')
 
-    expect(result).toBe('hello')
+      expect(result).toBe('hello')
+    } finally {
+      wsClient.close()
+    }
   })
 
   test('error', async () => {
     const wsClient = new WebSocket('ws://localhost:8080')
     await waitForEventEmitter(wsClient, 'open')
 
-    const [client] = createClient<IAPI>(wsClient)
-    const err = await getErrorPromise(client.error('hello'))
+    try {
+      const [client] = createClient<IAPI>(wsClient)
+      const err = await getErrorPromise(client.error('hello'))
 
-    expect(err).toBeInstanceOf(Error)
-    expect(err!.message).toMatch('Error: hello')
+      expect(err).toBeInstanceOf(Error)
+      expect(err!.message).toMatch('Error: hello')
+    } finally {
+      wsClient.close()
+    }
   })
 })

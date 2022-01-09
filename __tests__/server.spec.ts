@@ -45,6 +45,7 @@ describe('createServer', () => {
       const result = await client.eval('client.echo("hello")')
       expect(result).toEqual('hello')
     } finally {
+      wsClient.close()
       cancelServer()
     }
   })
@@ -60,6 +61,7 @@ describe('createServer', () => {
       expect(err).toBeInstanceOf(Error)
       expect(err!.message).toMatch('Error: hello')
     } finally {
+      wsClient.close()
       cancelServer()
     }
   })

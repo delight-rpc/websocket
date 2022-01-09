@@ -4,7 +4,7 @@ import { getResult } from 'return-style'
 import { isString } from '@blackglory/types'
 
 export function createServer<IAPI extends object>(
-  api: IAPI
+  api: DelightRPC.ImplementationOf<IAPI>
 , socket: WebSocket
 , parameterValidators?: DelightRPC.ParameterValidators<IAPI>
 ): () => void {

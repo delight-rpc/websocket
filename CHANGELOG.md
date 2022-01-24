@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.2.5](https://github.com/delight-rpc/websocket/compare/v0.2.4...v0.2.5) (2022-01-24)
+
+
+### Features
+
+* add expectedVersion support ([d1dbc6a](https://github.com/delight-rpc/websocket/commit/d1dbc6abf5b6105094d9e043f1e36e28d8ffee14))
+
 ### [0.2.4](https://github.com/delight-rpc/websocket/compare/v0.2.3...v0.2.4) (2022-01-09)
 
 ### [0.2.3](https://github.com/delight-rpc/websocket/compare/v0.2.2...v0.2.3) (2022-01-04)

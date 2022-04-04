@@ -16,7 +16,7 @@ export function createServer<IAPI extends object>(
     const data = event.data
     if (isString(data)) {
       const req = getResult(() => JSON.parse(data))
-      if (DelightRPC.isRequest(req)) {
+      if (DelightRPC.isRequest(req) || DelightRPC.isBatchRequest(req)) {
         const result = await DelightRPC.createResponse(
           api
         , req

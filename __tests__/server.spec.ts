@@ -4,6 +4,7 @@ import '@blackglory/jest-matchers'
 import { createServer } from '@src/server'
 import { waitForEventEmitter } from '@blackglory/wait-for'
 import { getErrorPromise } from 'return-style'
+import { Level } from 'extra-logger'
 
 interface IAPI {
   eval(code: string): Promise<unknown>
@@ -27,7 +28,7 @@ beforeEach(() => {
       async eval(code) {
         return await eval(code)
       }
-    }, socket)
+    }, socket, { loggerLevel: Level.None })
   })
 })
 afterEach(() => {
@@ -39,7 +40,9 @@ describe('createServer', () => {
     const wsClient = new WebSocket('ws://localhost:8080')
     await waitForEventEmitter(wsClient, 'open')
 
-    const cancelServer = createServer(api, wsClient)
+    const cancelServer = createServer(api, wsClient, {
+      loggerLevel: Level.None
+    })
     const [client, close] = createClient<IAPI>(wsClient)
     try {
       const result = await client.eval('client.echo("hello")')
@@ -54,7 +57,9 @@ describe('createServer', () => {
     const wsClient = new WebSocket('ws://localhost:8080')
     await waitForEventEmitter(wsClient, 'open')
 
-    const cancelServer = createServer(api, wsClient)
+    const cancelServer = createServer(api, wsClient, {
+      loggerLevel: Level.None
+    })
     const [client, close] = createClient<IAPI>(wsClient)
     try {
       const err = await getErrorPromise(client.eval('client.error("hello")'))

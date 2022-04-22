@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.4.0](https://github.com/delight-rpc/websocket/compare/v0.3.3...v0.4.0) (2022-04-22)
+
+
+### ⚠ BREAKING CHANGES
+
+* The signature of createServer changed
+
+### Features
+
+* add logging ([d71fc4e](https://github.com/delight-rpc/websocket/commit/d71fc4e84413d5af40ff199e85882841c2c9948f))
+
 ### [0.3.3](https://github.com/delight-rpc/websocket/compare/v0.3.2...v0.3.3) (2022-04-13)
 
 ### [0.3.2](https://github.com/delight-rpc/websocket/compare/v0.3.1...v0.3.2) (2022-04-04)

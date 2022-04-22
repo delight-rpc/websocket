@@ -4,6 +4,8 @@ import { getResult } from 'return-style'
 import { isString } from '@blackglory/types'
 import { Logger, TerminalTransport, Level } from 'extra-logger'
 
+export { Level } from 'extra-logger'
+
 export function createServer<IAPI extends object>(
   api: DelightRPC.ImplementationOf<IAPI>
 , socket: WebSocket

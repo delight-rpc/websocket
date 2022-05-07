@@ -1,22 +1,23 @@
 import * as DelightRPC from 'delight-rpc'
 import { WebSocket, MessageEvent } from 'ws'
 import { getResult } from 'return-style'
-import { isString } from '@blackglory/types'
 import { Logger, TerminalTransport, Level } from 'extra-logger'
+import { isntNull, isString } from '@blackglory/prelude'
 
 export { Level } from 'extra-logger'
 
 export function createServer<IAPI extends object>(
   api: DelightRPC.ImplementationOf<IAPI>
 , socket: WebSocket
-, options: {
-    loggerLevel: Level
-  , parameterValidators?: DelightRPC.ParameterValidators<IAPI>
-  , version?: `${number}.${number}.${number}`
-  }
+, { loggerLevel = Level.None, parameterValidators, version, channel }: {
+    loggerLevel?: Level
+    parameterValidators?: DelightRPC.ParameterValidators<IAPI>
+    version?: `${number}.${number}.${number}`
+    channel?: string
+  } = {}
 ): () => void {
   const logger = new Logger({
-    level: options.loggerLevel
+    level: loggerLevel
   , transport: new TerminalTransport()
   })
 
@@ -26,25 +27,30 @@ export function createServer<IAPI extends object>(
   async function handler(event: MessageEvent): Promise<void> {
     const data = event.data
     if (isString(data)) {
-      const req = getResult(() => JSON.parse(data))
-      if (DelightRPC.isRequest(req) || DelightRPC.isBatchRequest(req)) {
-        const result = await logger.infoTime(
+      const request = getResult(() => JSON.parse(data))
+      if (DelightRPC.isRequest(request) || DelightRPC.isBatchRequest(request)) {
+        const response = await logger.infoTime(
           () => {
-            if (DelightRPC.isRequest(req)) {
-              return req.method.join('.')
+            if (DelightRPC.isRequest(request)) {
+              return request.method.join('.')
             } else {
-              return req.requests.map(x => x.method.join('.')).join(', ')
+              return request.requests.map(x => x.method.join('.')).join(', ')
             }
           }
         , () => DelightRPC.createResponse(
             api
-          , req
-          , options.parameterValidators
-          , options.version
+          , request
+          , {
+              parameterValidators
+            , version
+            , channel
+            }
           )
         )
 
-        socket.send(JSON.stringify(result))
+        if (isntNull(response)) {
+          socket.send(JSON.stringify(response))
+        }
       }
     }
   }

@@ -3,20 +3,24 @@ import { Deferred } from 'extra-promise'
 import { CustomError } from '@blackglory/errors'
 import { WebSocket, MessageEvent } from 'ws'
 import { getResult } from 'return-style'
-import { isString } from '@blackglory/types'
+import { isString } from '@blackglory/prelude'
+import { IResponse, IError, IBatchResponse } from '@delight-rpc/protocol'
 
 export function createClient<IAPI extends object>(
   socket: WebSocket
-, parameterValidators?: DelightRPC.ParameterValidators<IAPI>
-, expectedVersion?: `${number}.${number}.${number}`
+, { parameterValidators, expectedVersion, channel }: {
+    parameterValidators?: DelightRPC.ParameterValidators<IAPI>
+    expectedVersion?: `${number}.${number}.${number}`
+    channel?: string
+  } = {}
 ): [client: DelightRPC.ClientProxy<IAPI>, close: () => void] {
-  const pendings: { [id: string]: Deferred<DelightRPC.IResponse<any>> } = {}
+  const pendings: { [id: string]: Deferred<IResponse<any>> } = {}
 
   socket.addEventListener('message', handler)
 
   const client = DelightRPC.createClient<IAPI>(
     async function send(request) {
-      const res = new Deferred<DelightRPC.IResponse<any>>()
+      const res = new Deferred<IResponse<any>>()
       pendings[request.id] = res
       try {
         socket.send(JSON.stringify(request))
@@ -25,8 +29,11 @@ export function createClient<IAPI extends object>(
         delete pendings[request.id]
       }
     }
-  , parameterValidators
-  , expectedVersion
+  , {
+      parameterValidators
+    , expectedVersion
+    , channel
+    }
   )
 
   return [client, close]
@@ -53,12 +60,15 @@ export function createClient<IAPI extends object>(
 
 export function createBatchClient(
   socket: WebSocket
-, expectedVersion?: `${number}.${number}.${number}`
+, { expectedVersion, channel }: {
+    expectedVersion?: `${number}.${number}.${number}`
+    channel?: string
+  } = {}
 ): [client: DelightRPC.BatchClient, close: () => void] {
   const pendings: {
     [id: string]: Deferred<
-    | DelightRPC.IError
-    | DelightRPC.IBatchResponse<unknown>
+    | IError
+    | IBatchResponse<unknown>
     >
   } = {}
 
@@ -67,8 +77,8 @@ export function createBatchClient(
   const client = new DelightRPC.BatchClient(
     async function send(request) {
       const res = new Deferred<
-      | DelightRPC.IError
-      | DelightRPC.IBatchResponse<unknown>
+      | IError
+      | IBatchResponse<unknown>
       >()
       pendings[request.id] = res
       try {
@@ -78,7 +88,10 @@ export function createBatchClient(
         delete pendings[request.id]
       }
     }
-  , expectedVersion
+  , {
+      expectedVersion
+    , channel
+    }
   )
 
   return [client, close]

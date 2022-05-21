@@ -4,7 +4,6 @@ import '@blackglory/jest-matchers'
 import { createServer } from '@src/server'
 import { waitForEventEmitter } from '@blackglory/wait-for'
 import { getErrorPromise } from 'return-style'
-import { Level } from 'extra-logger'
 
 interface IAPI {
   echo(message: string): string
@@ -22,7 +21,7 @@ beforeEach(() => {
     , error(message) {
         throw new Error(message)
       }
-    }, socket, { loggerLevel: Level.None })
+    }, socket)
   })
 })
 afterEach(() => {

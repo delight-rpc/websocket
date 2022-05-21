@@ -9,11 +9,12 @@ export { Level } from 'extra-logger'
 export function createServer<IAPI extends object>(
   api: DelightRPC.ImplementationOf<IAPI>
 , socket: WebSocket
-, { loggerLevel = Level.None, parameterValidators, version, channel }: {
+, { loggerLevel = Level.None, parameterValidators, version, channel, ownPropsOnly }: {
     loggerLevel?: Level
     parameterValidators?: DelightRPC.ParameterValidators<IAPI>
     version?: `${number}.${number}.${number}`
     channel?: string
+    ownPropsOnly?: boolean
   } = {}
 ): () => void {
   const logger = new Logger({
@@ -44,6 +45,7 @@ export function createServer<IAPI extends object>(
               parameterValidators
             , version
             , channel
+            , ownPropsOnly
             }
           )
         )

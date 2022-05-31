@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.5.2](https://github.com/delight-rpc/websocket/compare/v0.5.1...v0.5.2) (2022-05-31)
+
+
+### Features
+
+* add timeout option ([ecbd709](https://github.com/delight-rpc/websocket/commit/ecbd709823602ffca7a8ed0d763c87e52eb387aa))
+
 ### [0.5.1](https://github.com/delight-rpc/websocket/compare/v0.5.0...v0.5.1) (2022-05-21)
 
 ## [0.5.0](https://github.com/delight-rpc/websocket/compare/v0.4.1...v0.5.0) (2022-05-07)

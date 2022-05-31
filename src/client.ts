@@ -5,13 +5,16 @@ import { WebSocket, MessageEvent } from 'ws'
 import { getResult } from 'return-style'
 import { isString } from '@blackglory/prelude'
 import { IResponse, IError, IBatchResponse } from '@delight-rpc/protocol'
+import { withAbortSignal, timeoutSignal } from 'extra-abort'
+import { isUndefined } from '@blackglory/prelude'
 
 export function createClient<IAPI extends object>(
   socket: WebSocket
-, { parameterValidators, expectedVersion, channel }: {
+, { parameterValidators, expectedVersion, channel, timeout }: {
     parameterValidators?: DelightRPC.ParameterValidators<IAPI>
     expectedVersion?: `${number}.${number}.${number}`
     channel?: string
+    timeout?: number
   } = {}
 ): [client: DelightRPC.ClientProxy<IAPI>, close: () => void] {
   const pendings: { [id: string]: Deferred<IResponse<any>> } = {}
@@ -24,7 +27,11 @@ export function createClient<IAPI extends object>(
       pendings[request.id] = res
       try {
         socket.send(JSON.stringify(request))
-        return await res
+        if (isUndefined(timeout)) {
+          return await res
+        } else {
+          return await withAbortSignal(timeoutSignal(timeout), () => res)
+        }
       } finally {
         delete pendings[request.id]
       }
@@ -60,9 +67,10 @@ export function createClient<IAPI extends object>(
 
 export function createBatchClient(
   socket: WebSocket
-, { expectedVersion, channel }: {
+, { expectedVersion, channel, timeout }: {
     expectedVersion?: `${number}.${number}.${number}`
     channel?: string
+    timeout?: number
   } = {}
 ): [client: DelightRPC.BatchClient, close: () => void] {
   const pendings: {
@@ -83,7 +91,11 @@ export function createBatchClient(
       pendings[request.id] = res
       try {
         socket.send(JSON.stringify(request))
-        return await res
+        if (isUndefined(timeout)) {
+          return await res
+        } else {
+          return await withAbortSignal(timeoutSignal(timeout), () => res)
+        }
       } finally {
         delete pendings[request.id]
       }

@@ -28,7 +28,7 @@ beforeEach(() => {
       async eval(code) {
         return await eval(code)
       }
-    }, socket, { loggerLevel: Level.None })
+    }, socket)
   })
 })
 afterEach(() => {

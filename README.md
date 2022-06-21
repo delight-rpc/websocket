@@ -41,7 +41,7 @@ function createServer<IAPI extends object>(
     loggerLevel?: Level = Level.None
     parameterValidators?: DelightRPC.ParameterValidators<IAPI>
     version?: `${number}.${number}.${number}`
-    channel?: string
+    channel?: string | RegExp | AnyChannel
     ownPropsOnly?: boolean
   }
 ): () => void

@@ -11,6 +11,7 @@
   "repository": "git@github.com:delight-rpc/websocket.git",
   "author": "BlackGlory <woshenmedoubuzhidao@blackglory.me>",
   "license": "MIT",
+  "sideEffects": false,
   "scripts": {
     "prepare": "ts-patch install -s",
     "lint": "eslint --ext .js,.jsx,.ts,.tsx --quiet src",

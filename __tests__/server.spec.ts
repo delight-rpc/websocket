@@ -1,6 +1,5 @@
 import { createClient } from '@src/client'
 import WebSocket, { Server, WebSocketServer } from 'ws'
-import '@blackglory/jest-matchers'
 import { createServer } from '@src/server'
 import { waitForEventEmitter } from '@blackglory/wait-for'
 import { getErrorPromise } from 'return-style'

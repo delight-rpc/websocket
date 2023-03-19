@@ -1,9 +1,10 @@
-import { createClient } from '@src/client'
-import WebSocket, { Server, WebSocketServer } from 'ws'
-import { createServer } from '@src/server'
+import { createClient } from '@src/client.js'
+import WebSocket, { WebSocketServer } from 'ws'
+import { createServer } from '@src/server.js'
 import { waitForEventEmitter } from '@blackglory/wait-for'
 import { getErrorPromise } from 'return-style'
 import { Level } from 'extra-logger'
+import { promisify } from 'extra-promise'
 
 interface IAPI {
   eval(code: string): Promise<unknown>
@@ -20,7 +21,7 @@ const api = {
 
 let server: WebSocketServer
 beforeEach(() => {
-  server = new Server({ port: 8080 })
+  server = new WebSocketServer({ port: 8080 })
   server.on('connection', socket => {
     const [client] = createClient(socket)
     const cancelServer = createServer<IAPI>({
@@ -30,8 +31,8 @@ beforeEach(() => {
     }, socket)
   })
 })
-afterEach(() => {
-  server.close()
+afterEach(async () => {
+  await promisify(server.close.bind(server))()
 })
 
 describe('createServer', () => {

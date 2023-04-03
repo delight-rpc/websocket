@@ -1946,10 +1946,10 @@ define-properties@^1.1.3:
   dependencies:
     object-keys "^1.0.12"
 
-delight-rpc@^6.1.0:
-  version "6.1.0"
-  resolved "https://registry.yarnpkg.com/delight-rpc/-/delight-rpc-6.1.0.tgz#3006c3fd7f4fcdf11b409e453f9e979df425603c"
-  integrity sha512-h1bd2JAr2v6S78q4QIkXwB0/dm4S53tREZuyo8NvqzojNFdMAbtIHIn08DoWuAQtziLwIMrfteFsHI/4vYl73A==
+delight-rpc@^6.1.1:
+  version "6.1.1"
+  resolved "https://registry.yarnpkg.com/delight-rpc/-/delight-rpc-6.1.1.tgz#7f57cf8fe653b2abdfe02db6ae781e165e06f8c4"
+  integrity sha512-Kcyx+5QzSQQqvOnJoUFfoHVCZ6N9adc08wnTn3Thu5DkeUVzCnu1St2gjuF/BqPu7UCTKqmQGX7SXGeeiPj0Cw==
   dependencies:
     "@blackglory/errors" "^3.0.0"
     "@blackglory/prelude" "^0.3.1"

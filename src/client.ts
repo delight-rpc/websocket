@@ -104,7 +104,7 @@ export function createBatchClient(
           socket.send(JSON.stringify(abort))
         })
 
-        return withAbortSignal(mergedSignal, () => res)
+        return await withAbortSignal(mergedSignal, () => res)
       } finally {
         delete pendings[request.id]
       }

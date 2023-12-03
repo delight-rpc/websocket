@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.7.4](https://github.com/delight-rpc/websocket/compare/v0.7.3...v0.7.4) (2023-12-03)
+
+
+### Bug Fixes
+
+* createBatchClient ([fe9f9e6](https://github.com/delight-rpc/websocket/commit/fe9f9e6ea85eda5f08a97adc44af0d35b29e19f5))
+
 ### [0.7.3](https://github.com/delight-rpc/websocket/compare/v0.7.2...v0.7.3) (2023-06-11)
 
 

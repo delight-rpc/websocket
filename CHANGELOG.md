@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [0.8.0](https://github.com/delight-rpc/websocket/compare/v0.7.6...v0.8.0) (2026-02-25)
+
+
+### ⚠ BREAKING CHANGES
+
+* **server:** Node.js v16 => Node.js v22
+
+### Bug Fixes
+
+* **server:** abort request by channel fields ([24417a3](https://github.com/delight-rpc/websocket/commit/24417a3feae1caf18cbc0ff903b691caa2b893bc))
+
 ### [0.7.6](https://github.com/delight-rpc/websocket/compare/v0.7.5...v0.7.6) (2026-02-11)
 
 

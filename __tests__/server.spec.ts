@@ -1,3 +1,4 @@
+import { beforeEach, afterEach, describe, test, expect } from 'vitest'
 import { createClient } from '@src/client.js'
 import WebSocket, { WebSocketServer } from 'ws'
 import { createServer } from '@src/server.js'

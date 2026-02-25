@@ -4,6 +4,7 @@ import { getResult } from 'return-style'
 import { Logger, TerminalTransport, Level } from 'extra-logger'
 import { isntNull, isString } from '@blackglory/prelude'
 import { AbortController } from 'extra-abort'
+import { HashMap } from '@blackglory/structures'
 
 export { Level } from 'extra-logger'
 
@@ -22,38 +23,44 @@ export function createServer<IAPI extends object>(
     level: loggerLevel
   , transport: new TerminalTransport()
   })
-  const idToController: Map<string, AbortController> = new Map()
+  const channelIdToController: HashMap<
+    {
+      channel?: string
+    , id: string
+    }
+  , AbortController
+  > = new HashMap(({ channel, id }) => JSON.stringify([channel, id]))
 
   socket.addEventListener('message', handler)
   socket.addEventListener('close', () => {
-    for (const controller of idToController.values()) {
+    for (const controller of channelIdToController.values()) {
       controller.abort()
     }
 
-    idToController.clear()
+    channelIdToController.clear()
   })
   return () => socket.removeEventListener('message', handler)
 
   async function handler(event: MessageEvent): Promise<void> {
     const data = event.data
     if (isString(data)) {
-      const payload = getResult(() => JSON.parse(data))
-      if (DelightRPC.isRequest(payload) || DelightRPC.isBatchRequest(payload)) {
+      const message = getResult(() => JSON.parse(data))
+      if (DelightRPC.isRequest(message) || DelightRPC.isBatchRequest(message)) {
         const controller = new AbortController()
-        idToController.set(payload.id, controller)
+        channelIdToController.set(message, controller)
 
         try {
           const response = await logger.infoTime(
             () => {
-              if (DelightRPC.isRequest(payload)) {
-                return payload.method.join('.')
+              if (DelightRPC.isRequest(message)) {
+                return message.method.join('.')
               } else {
-                return payload.requests.map(x => x.method.join('.')).join(', ')
+                return message.requests.map(x => x.method.join('.')).join(', ')
               }
             }
           , () => DelightRPC.createResponse(
               api
-            , payload
+            , message
             , {
                 parameterValidators
               , version
@@ -68,12 +75,12 @@ export function createServer<IAPI extends object>(
             socket.send(JSON.stringify(response))
           }
         } finally {
-          idToController.delete(payload.id)
+          channelIdToController.delete(message)
         }
-      } else if (DelightRPC.isAbort(payload)) {
-        if (DelightRPC.matchChannel(payload, channel)) {
-          idToController.get(payload.id)?.abort()
-          idToController.delete(payload.id)
+      } else if (DelightRPC.isAbort(message)) {
+        if (DelightRPC.matchChannel(message, channel)) {
+          channelIdToController.get(message)?.abort()
+          channelIdToController.delete(message)
         }
       }
     }

@@ -16,13 +16,13 @@ export function createClient<IAPI extends object>(
     timeout?: number
   } = {}
 ): [client: DelightRPC.ClientProxy<IAPI>, close: () => void] {
-  const pendings: Map<string, Deferred<IResponse<any>>> = new Map()
+  const pendings: Map<string, Deferred<IResponse<unknown>>> = new Map()
 
   socket.addEventListener('message', handler)
 
   const client = DelightRPC.createClient<IAPI>(
     async function send(request, signal) {
-      const res = new Deferred<IResponse<any>>()
+      const res = new Deferred<IResponse<unknown>>()
       pendings.set(request.id, res)
       try {
         socket.send(JSON.stringify(request))

@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [0.8.1](https://github.com/delight-rpc/websocket/compare/v0.8.0...v0.8.1) (2026-02-26)
+
+
+### Bug Fixes
+
+* **client, server:** destructors ([3dd777b](https://github.com/delight-rpc/websocket/commit/3dd777bd159415344b614c7776334ec788aa7e75))
+
 ## [0.8.0](https://github.com/delight-rpc/websocket/compare/v0.7.6...v0.8.0) (2026-02-25)
 
 

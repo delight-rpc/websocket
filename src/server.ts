@@ -5,6 +5,7 @@ import { Logger, TerminalTransport, Level } from 'extra-logger'
 import { isntNull, isString } from '@blackglory/prelude'
 import { AbortController } from 'extra-abort'
 import { HashMap } from '@blackglory/structures'
+import { SyncDestructor } from 'extra-defer'
 
 export { Level } from 'extra-logger'
 
@@ -19,10 +20,13 @@ export function createServer<IAPI extends object>(
     ownPropsOnly?: boolean
   } = {}
 ): () => void {
+  const destructor = new SyncDestructor()
+
   const logger = new Logger({
     level: loggerLevel
   , transport: new TerminalTransport()
   })
+
   const channelIdToController: HashMap<
     {
       channel?: string
@@ -30,24 +34,38 @@ export function createServer<IAPI extends object>(
     }
   , AbortController
   > = new HashMap(({ channel, id }) => JSON.stringify([channel, id]))
+  destructor.defer(abortAllPendings)
 
-  socket.addEventListener('message', handler)
-  socket.addEventListener('close', () => {
+  socket.addEventListener('message', receive)
+  destructor.defer(() => socket.removeEventListener('message', receive))
+
+  socket.addEventListener('close', close)
+  destructor.defer(() => socket.removeEventListener('close', close))
+
+  return close
+
+  function close(): void {
+    destructor.execute()
+  }
+
+  function abortAllPendings(): void {
     for (const controller of channelIdToController.values()) {
       controller.abort()
     }
 
     channelIdToController.clear()
-  })
-  return () => socket.removeEventListener('message', handler)
+  }
 
-  async function handler(event: MessageEvent): Promise<void> {
+  async function receive(event: MessageEvent): Promise<void> {
     const data = event.data
     if (isString(data)) {
       const message = getResult(() => JSON.parse(data))
       if (DelightRPC.isRequest(message) || DelightRPC.isBatchRequest(message)) {
+        const destructor = new SyncDestructor()
+
         const controller = new AbortController()
         channelIdToController.set(message, controller)
+        destructor.defer(() => channelIdToController.delete(message))
 
         try {
           const response = await logger.infoTime(
@@ -75,7 +93,7 @@ export function createServer<IAPI extends object>(
             socket.send(JSON.stringify(response))
           }
         } finally {
-          channelIdToController.delete(message)
+          destructor.execute()
         }
       } else if (DelightRPC.isAbort(message)) {
         if (DelightRPC.matchChannel(message, channel)) {

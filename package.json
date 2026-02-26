@@ -60,6 +60,7 @@
     "@blackglory/structures": "^0.14.13",
     "@delight-rpc/protocol": "^4.1.1",
     "extra-abort": "^0.4.1",
+    "extra-defer": "^0.3.1",
     "extra-logger": "^0.8.0",
     "extra-promise": "^7.1.1",
     "return-style": "^4.0.0"
